@@ -14,7 +14,7 @@
     <name>online-book-store</name>
     <description>online-book-store</description>
     <properties>
-        <java.version>21</java.version>
+        <java.version>17</java.version>
         <maven.checkstyle.plugin.configLocation>checkstyle.xml</maven.checkstyle.plugin.configLocation>
     </properties>
     <dependencies>
