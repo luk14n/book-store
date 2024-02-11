@@ -1,10 +1,13 @@
 package com.lukian.bookstore.service;
 
-import com.lukian.bookstore.model.Book;
+import com.lukian.bookstore.dto.BookDto;
+import com.lukian.bookstore.dto.CreateBookRequestDto;
 import java.util.List;
 
 public interface BookService {
-    Book save(Book book);
+    BookDto save(CreateBookRequestDto requestDto);
 
-    List<Book> findAll();
+    List<BookDto> findAll();
+
+    BookDto findById(Long id);
 }
