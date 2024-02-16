@@ -1,6 +1,7 @@
 package com.lukian.bookstore.controller;
 
 import com.lukian.bookstore.dto.BookDto;
+import com.lukian.bookstore.dto.BookSearchParametersDto;
 import com.lukian.bookstore.dto.CreateBookRequestDto;
 import com.lukian.bookstore.service.BookService;
 import java.util.List;
@@ -43,5 +44,10 @@ public class BookController {
     @DeleteMapping("/{id}")
     public void deleteBook(@PathVariable Long id) {
         bookService.delete(id);
+    }
+
+    @GetMapping("/search")
+    public List<BookDto> searchBooks(BookSearchParametersDto searchParameters) {
+        return bookService.search(searchParameters);
     }
 }

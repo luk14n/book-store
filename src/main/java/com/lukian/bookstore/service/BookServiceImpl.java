@@ -1,13 +1,16 @@
 package com.lukian.bookstore.service;
 
 import com.lukian.bookstore.dto.BookDto;
+import com.lukian.bookstore.dto.BookSearchParametersDto;
 import com.lukian.bookstore.dto.CreateBookRequestDto;
 import com.lukian.bookstore.exception.EntityNotFoundException;
 import com.lukian.bookstore.mapper.BookMapper;
 import com.lukian.bookstore.model.Book;
-import com.lukian.bookstore.repository.BookRepository;
+import com.lukian.bookstore.repository.book.BookRepository;
+import com.lukian.bookstore.repository.book.BookSpecificationBuilder;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Service;
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
+    private final BookSpecificationBuilder bookSpecificationBuilder;
 
     @Override
     public BookDto save(CreateBookRequestDto requestDto) {
@@ -49,5 +53,13 @@ public class BookServiceImpl implements BookService {
     @Override
     public void delete(Long id) {
         bookRepository.deleteById(id);
+    }
+
+    @Override
+    public List<BookDto> search(BookSearchParametersDto searchParameters) {
+        Specification<Book> bookSpecification = bookSpecificationBuilder.build(searchParameters);
+        return bookRepository.findAll(bookSpecification).stream()
+                .map(bookMapper::toDto)
+                .toList();
     }
 }
