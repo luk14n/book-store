@@ -1,9 +1,9 @@
 package com.lukian.bookstore.controller;
 
-import com.lukian.bookstore.dto.BookDto;
-import com.lukian.bookstore.dto.BookSearchParametersDto;
-import com.lukian.bookstore.dto.CreateBookRequestDto;
-import com.lukian.bookstore.service.BookService;
+import com.lukian.bookstore.dto.book.BookDto;
+import com.lukian.bookstore.dto.book.BookSearchParametersDto;
+import com.lukian.bookstore.dto.book.CreateBookRequestDto;
+import com.lukian.bookstore.service.book.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
