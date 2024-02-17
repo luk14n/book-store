@@ -6,6 +6,7 @@ import com.lukian.bookstore.dto.CreateBookRequestDto;
 import com.lukian.bookstore.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
@@ -42,7 +43,7 @@ public class BookController {
 
     @PostMapping
     @Operation(summary = "Create a new book", description = "Add a new book to the online store")
-    public BookDto createBook(@RequestBody CreateBookRequestDto requestDto) {
+    public BookDto createBook(@RequestBody @Valid CreateBookRequestDto requestDto) {
         return bookService.save(requestDto);
     }
 
@@ -50,7 +51,7 @@ public class BookController {
     @Operation(summary = "Update the book",
             description = "Update an existing book by specifying new desired parameters")
     public BookDto updateBook(@PathVariable(name = "id") Long id,
-                              @RequestBody CreateBookRequestDto requestDto) {
+                              @RequestBody @Valid CreateBookRequestDto requestDto) {
         return bookService.update(id, requestDto);
     }
 
