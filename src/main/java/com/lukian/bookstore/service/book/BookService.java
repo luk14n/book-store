@@ -1,8 +1,8 @@
-package com.lukian.bookstore.service;
+package com.lukian.bookstore.service.book;
 
-import com.lukian.bookstore.dto.BookDto;
-import com.lukian.bookstore.dto.BookSearchParametersDto;
-import com.lukian.bookstore.dto.CreateBookRequestDto;
+import com.lukian.bookstore.dto.book.BookDto;
+import com.lukian.bookstore.dto.book.BookSearchParametersDto;
+import com.lukian.bookstore.dto.book.CreateBookRequestDto;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 

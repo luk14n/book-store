@@ -1,6 +1,6 @@
 package com.lukian.bookstore.repository.book;
 
-import com.lukian.bookstore.dto.BookSearchParametersDto;
+import com.lukian.bookstore.dto.book.BookSearchParametersDto;
 import com.lukian.bookstore.model.Book;
 import com.lukian.bookstore.repository.SpecificationBuilder;
 import com.lukian.bookstore.repository.SpecificationProviderManager;
