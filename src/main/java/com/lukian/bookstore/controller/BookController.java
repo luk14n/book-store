@@ -11,6 +11,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +29,7 @@ public class BookController {
     private final BookService bookService;
 
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_USER')")
     @Operation(summary = "Get all books",
             description = "Get a list of all available books with optional pagination")
     public List<BookDto> getAll(@ParameterObject Pageable pageable) {
@@ -35,6 +37,7 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @Operation(summary = "Get book by ID",
             description = "Get a specific book based on its unique ID")
     public BookDto getBookById(@PathVariable(name = "id") Long id) {
@@ -42,12 +45,14 @@ public class BookController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Create a new book", description = "Add a new book to the online store")
     public BookDto createBook(@RequestBody @Valid CreateBookRequestDto requestDto) {
         return bookService.save(requestDto);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Update the book",
             description = "Update an existing book by specifying new desired parameters")
     public BookDto updateBook(@PathVariable(name = "id") Long id,
@@ -56,6 +61,7 @@ public class BookController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Delete the book",
             description = "Delete a specific book from the online store by its unique ID")
     public void deleteBook(@PathVariable(name = "id") Long id) {
@@ -63,6 +69,7 @@ public class BookController {
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @Operation(summary = "Search for the book",
             description = "Dynamically specify criteria to filter desired books")
     public List<BookDto> searchBooks(@ParameterObject BookSearchParametersDto searchParameters) {

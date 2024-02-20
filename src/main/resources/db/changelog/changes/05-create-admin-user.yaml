@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-admin-user
+      author: lukian
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: email
+                  value: "admin@email.com"
+              - column:
+                  name: password
+                  value: "$2a$10$0aRTP4xx4TpbTuVwBiFaHO4ssZ7RqJSyRAVYkAFAIliPUuoST8zma"
+              - column:
+                  name: first_name
+                  value: "Admin"
+              - column:
+                  name: last_name
+                  value: "User"
+              - column:
+                  name: shipping_address
+                  value: "Admin Address"
+              - column:
+                  name: is_deleted
+                  value: 0
+        # Inserting in users_roles table since using @ManyToMany
+        - insert:
+            tableName: users_roles
+            columns:
+              - column: { name: user_id, valueComputed: "(SELECT id FROM users WHERE email = 'admin@email.com')" }
+              - column: { name: role_id, valueComputed: "(SELECT id FROM roles WHERE role = 'ADMIN')" }
