@@ -1,9 +1,0 @@
-databaseChangeLog:
-  - changeSet:
-      id: modify-role-column
-      author: lukian
-      changes:
-        - modifyDataType:
-            tableName: roles
-            columnName: role
-            newDataType: VARCHAR(255)

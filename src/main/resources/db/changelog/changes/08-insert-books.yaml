@@ -1,0 +1,50 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-books
+      author: lukian
+      changes:
+        - insert:
+            tableName: books
+            columns:
+              - column: { name: title, value: "Effective Java" }
+              - column: { name: author, value: "Joshua Bloch" }
+              - column: { name: isbn, value: "9780321356680" }
+              - column: { name: price, value: "29.99" }
+              - column: { name: description, value: "A must-read for Java developers" }
+              - column: { name: cover_image, value: "effective_java_cover.jpg" }
+        - insert:
+            tableName: books
+            columns:
+              - column: { name: title, value: "Clean Code" }
+              - column: { name: author, value: "Robert C. Martin" }
+              - column: { name: isbn, value: "9780132350884" }
+              - column: { name: price, value: "34.99" }
+              - column: { name: description, value: "Crafting readable and maintainable code" }
+              - column: { name: cover_image, value: "clean_code_cover.jpg" }
+        - insert:
+            tableName: books
+            columns:
+              - column: { name: title, value: "Design Patterns" }
+              - column: { name: author, value: "Erich Gamma, Richard Helm, Ralph Johnson, John Vlissides" }
+              - column: { name: isbn, value: "9780201633610" }
+              - column: { name: price, value: "39.99" }
+              - column: { name: description, value: "Classic book on software design patterns" }
+              - column: { name: cover_image, value: "design_patterns_cover.jpg" }
+        - insert:
+            tableName: books
+            columns:
+              - column: { name: title, value: "The Pragmatic Programmer" }
+              - column: { name: author, value: "Andrew Hunt, David Thomas" }
+              - column: { name: isbn, value: "9780201616224" }
+              - column: { name: price, value: "31.99" }
+              - column: { name: description, value: "Your journey to mastery" }
+              - column: { name: cover_image, value: "pragmatic_programmer_cover.jpg" }
+        - insert:
+            tableName: books
+            columns:
+              - column: { name: title, value: "Code Complete" }
+              - column: { name: author, value: "Steve McConnell" }
+              - column: { name: isbn, value: "9780735619678" }
+              - column: { name: price, value: "42.99" }
+              - column: { name: description, value: "A comprehensive handbook for software construction" }
+              - column: { name: cover_image, value: "code_complete_cover.jpg" }

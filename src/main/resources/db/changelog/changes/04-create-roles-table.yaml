@@ -15,7 +15,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: role
-                  type: "ENUM('USER', 'ADMIN')"
+                  type: VARCHAR(255)
                   constraints:
                     nullable: false
                     unique: true
