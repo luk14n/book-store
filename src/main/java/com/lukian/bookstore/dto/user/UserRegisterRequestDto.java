@@ -10,7 +10,7 @@ import org.hibernate.validator.constraints.Length;
 @FieldMatch.FieldMatchList({
         @FieldMatch(first = "password", second = "repeatPassword", message = "Passwords must match")
 })
-public class CreateUserRequestDto {
+public class UserRegisterRequestDto {
     public static final String EMAIL_REGEXP = "^.+@.+\\S+$";
     public static final String PASSWORD_REGEXP =
             "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]+$";
