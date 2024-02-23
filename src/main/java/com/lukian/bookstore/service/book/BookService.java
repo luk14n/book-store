@@ -1,21 +1,21 @@
 package com.lukian.bookstore.service.book;
 
-import com.lukian.bookstore.dto.book.BookDto;
-import com.lukian.bookstore.dto.book.BookSearchParametersDto;
-import com.lukian.bookstore.dto.book.CreateBookRequestDto;
+import com.lukian.bookstore.dto.book.BookCreateRequestDto;
+import com.lukian.bookstore.dto.book.BookResponseDto;
+import com.lukian.bookstore.dto.book.BookSearchParametersRequestDto;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 
 public interface BookService {
-    BookDto save(CreateBookRequestDto requestDto);
+    BookResponseDto save(BookCreateRequestDto requestDto);
 
-    List<BookDto> findAll(Pageable pageable);
+    List<BookResponseDto> findAll(Pageable pageable);
 
-    BookDto findById(Long id);
+    BookResponseDto findById(Long id);
 
-    BookDto update(Long id, CreateBookRequestDto requestDto);
+    BookResponseDto update(Long id, BookCreateRequestDto requestDto);
 
     void delete(Long id);
 
-    List<BookDto> search(BookSearchParametersDto searchParameters);
+    List<BookResponseDto> search(BookSearchParametersRequestDto searchParameters);
 }

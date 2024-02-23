@@ -1,8 +1,8 @@
 package com.lukian.bookstore.mapper;
 
 import com.lukian.bookstore.config.MapperConfig;
-import com.lukian.bookstore.dto.book.BookDto;
-import com.lukian.bookstore.dto.book.CreateBookRequestDto;
+import com.lukian.bookstore.dto.book.BookCreateRequestDto;
+import com.lukian.bookstore.dto.book.BookResponseDto;
 import com.lukian.bookstore.model.Book;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
@@ -12,10 +12,10 @@ import org.springframework.stereotype.Component;
 @Component
 public interface BookMapper {
 
-    BookDto toDto(Book book);
+    BookResponseDto toDto(Book book);
 
-    Book toModel(CreateBookRequestDto requestDto);
+    Book toModel(BookCreateRequestDto requestDto);
 
-    void updateFromDto(CreateBookRequestDto requestDto, @MappingTarget Book book);
+    void updateFromDto(BookCreateRequestDto requestDto, @MappingTarget Book book);
 }
 

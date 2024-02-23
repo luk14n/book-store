@@ -1,7 +1,7 @@
 package com.lukian.bookstore.service.user;
 
-import com.lukian.bookstore.dto.user.CreateUserRequestDto;
-import com.lukian.bookstore.dto.user.UserDto;
+import com.lukian.bookstore.dto.user.UserRegisterRequestDto;
+import com.lukian.bookstore.dto.user.UserRegisterResponseDto;
 import com.lukian.bookstore.exception.RegistrationException;
 import com.lukian.bookstore.mapper.UserMapper;
 import com.lukian.bookstore.repository.user.UserRepository;
@@ -15,11 +15,12 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     @Override
-    public UserDto register(CreateUserRequestDto requestDto) throws RegistrationException {
-        if ((userRepository.findByEmail(requestDto.getEmail()).isEmpty())) {
+    public UserRegisterResponseDto register(UserRegisterRequestDto requestDto)
+            throws RegistrationException {
+        if ((userRepository.findByEmail(requestDto.email()).isEmpty())) {
             return userMapper.toDto(userRepository.save(userMapper.toModel(requestDto)));
         }
         throw new RegistrationException(
-                "User with email: " + requestDto.getEmail() + " already exist");
+                "User with email: " + requestDto.email() + " already exist");
     }
 }

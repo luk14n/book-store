@@ -1,6 +1,6 @@
 package com.lukian.bookstore.repository.book;
 
-import com.lukian.bookstore.dto.book.BookSearchParametersDto;
+import com.lukian.bookstore.dto.book.BookSearchParametersRequestDto;
 import com.lukian.bookstore.model.Book;
 import com.lukian.bookstore.repository.SpecificationBuilder;
 import com.lukian.bookstore.repository.SpecificationProviderManager;
@@ -14,7 +14,7 @@ public class BookSpecificationBuilder implements SpecificationBuilder<Book> {
     private final SpecificationProviderManager<Book> bookSpecificationProviderManager;
 
     @Override
-    public Specification<Book> build(BookSearchParametersDto searchParametersDto) {
+    public Specification<Book> build(BookSearchParametersRequestDto searchParametersDto) {
         Specification<Book> spec = Specification.where(null);
         if (searchParametersDto.titles() != null && searchParametersDto.titles().length > 0) {
             spec = spec.and(bookSpecificationProviderManager.getSpecificationProvider("title")
