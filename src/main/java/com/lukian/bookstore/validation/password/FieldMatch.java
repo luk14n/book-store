@@ -1,4 +1,4 @@
-package com.lukian.bookstore.validation;
+package com.lukian.bookstore.validation.password;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

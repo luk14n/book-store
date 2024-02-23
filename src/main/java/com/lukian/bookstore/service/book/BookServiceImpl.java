@@ -1,8 +1,8 @@
 package com.lukian.bookstore.service.book;
 
-import com.lukian.bookstore.dto.book.BookDto;
-import com.lukian.bookstore.dto.book.BookSearchParametersDto;
-import com.lukian.bookstore.dto.book.CreateBookRequestDto;
+import com.lukian.bookstore.dto.book.BookCreateRequestDto;
+import com.lukian.bookstore.dto.book.BookResponseDto;
+import com.lukian.bookstore.dto.book.BookSearchParametersRequestDto;
 import com.lukian.bookstore.exception.EntityNotFoundException;
 import com.lukian.bookstore.mapper.BookMapper;
 import com.lukian.bookstore.model.Book;
@@ -22,27 +22,27 @@ public class BookServiceImpl implements BookService {
     private final BookSpecificationBuilder bookSpecificationBuilder;
 
     @Override
-    public BookDto save(CreateBookRequestDto requestDto) {
+    public BookResponseDto save(BookCreateRequestDto requestDto) {
         Book book = bookMapper.toModel(requestDto);
         return bookMapper.toDto(bookRepository.save(book));
     }
 
     @Override
-    public List<BookDto> findAll(Pageable pageable) {
+    public List<BookResponseDto> findAll(Pageable pageable) {
         return bookRepository.findAll(pageable).stream()
                 .map(bookMapper::toDto)
                 .toList();
     }
 
     @Override
-    public BookDto findById(Long id) {
+    public BookResponseDto findById(Long id) {
         return bookRepository.findById(id)
                 .map(bookMapper::toDto)
                 .orElseThrow(() -> new EntityNotFoundException("Cannot find book by if: " + id));
     }
 
     @Override
-    public BookDto update(Long id, CreateBookRequestDto requestDto) {
+    public BookResponseDto update(Long id, BookCreateRequestDto requestDto) {
         Book bookFromDb = bookRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Cannot find book by id: " + id));
 
@@ -57,7 +57,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDto> search(BookSearchParametersDto searchParameters) {
+    public List<BookResponseDto> search(BookSearchParametersRequestDto searchParameters) {
         Specification<Book> bookSpecification = bookSpecificationBuilder.build(searchParameters);
         return bookRepository.findAll(bookSpecification).stream()
                 .map(bookMapper::toDto)

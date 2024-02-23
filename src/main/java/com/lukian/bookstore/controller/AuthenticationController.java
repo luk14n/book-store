@@ -1,7 +1,7 @@
 package com.lukian.bookstore.controller;
 
-import com.lukian.bookstore.dto.user.CreateUserRequestDto;
-import com.lukian.bookstore.dto.user.UserDto;
+import com.lukian.bookstore.dto.user.UserRegisterRequestDto;
+import com.lukian.bookstore.dto.user.UserRegisterResponseDto;
 import com.lukian.bookstore.exception.RegistrationException;
 import com.lukian.bookstore.service.user.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,7 +24,7 @@ public class AuthenticationController {
     @PostMapping("/registration")
     @Operation(summary = "Register a new user",
             description = "Performs a registration of a new user (i.e. adds a new user to the DB)")
-    public UserDto register(@RequestBody @Valid CreateUserRequestDto requestDto)
+    public UserRegisterResponseDto register(@RequestBody @Valid UserRegisterRequestDto requestDto)
             throws RegistrationException {
         return userService.register(requestDto);
     }
