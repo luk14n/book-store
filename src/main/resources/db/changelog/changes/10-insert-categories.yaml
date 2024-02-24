@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-categories
+      author: lukian
+      changes:
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: name, value: "Category1" }
+              - column: { name: description, value: "Description for Category1" }
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: name, value: "Category2" }
+              - column: { name: description, value: "Description for Category2" }

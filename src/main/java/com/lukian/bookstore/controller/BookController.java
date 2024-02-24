@@ -1,8 +1,8 @@
 package com.lukian.bookstore.controller;
 
-import com.lukian.bookstore.dto.book.BookCreateRequestDto;
-import com.lukian.bookstore.dto.book.BookResponseDto;
+import com.lukian.bookstore.dto.book.BookDto;
 import com.lukian.bookstore.dto.book.BookSearchParametersRequestDto;
+import com.lukian.bookstore.dto.book.CreateBookRequestDto;
 import com.lukian.bookstore.service.book.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,7 +32,7 @@ public class BookController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @Operation(summary = "Get all books",
             description = "Get a list of all available books with optional pagination")
-    public List<BookResponseDto> getAll(@ParameterObject Pageable pageable) {
+    public List<BookDto> getAll(@ParameterObject Pageable pageable) {
         return bookService.findAll(pageable);
     }
 
@@ -40,14 +40,14 @@ public class BookController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @Operation(summary = "Get book by ID",
             description = "Get a specific book based on its unique ID")
-    public BookResponseDto getBookById(@PathVariable(name = "id") Long id) {
+    public BookDto getBookById(@PathVariable(name = "id") Long id) {
         return bookService.findById(id);
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Create a new book", description = "Add a new book to the online store")
-    public BookResponseDto createBook(@RequestBody @Valid BookCreateRequestDto requestDto) {
+    public BookDto createBook(@RequestBody @Valid CreateBookRequestDto requestDto) {
         return bookService.save(requestDto);
     }
 
@@ -55,8 +55,8 @@ public class BookController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Update the book",
             description = "Update an existing book by specifying new desired parameters")
-    public BookResponseDto updateBook(@PathVariable(name = "id") Long id,
-                                      @RequestBody @Valid BookCreateRequestDto requestDto) {
+    public BookDto updateBook(@PathVariable(name = "id") Long id,
+                              @RequestBody @Valid CreateBookRequestDto requestDto) {
         return bookService.update(id, requestDto);
     }
 
@@ -72,8 +72,9 @@ public class BookController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @Operation(summary = "Search for the book",
             description = "Dynamically specify criteria to filter desired books")
-    public List<BookResponseDto> searchBooks(
+    public List<BookDto> searchBooks(
             @ParameterObject BookSearchParametersRequestDto searchParameters) {
         return bookService.search(searchParameters);
     }
 }
+

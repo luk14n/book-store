@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: populate-books-categories-table
+      author: lukian
+      changes:
+        - insert:
+            tableName: books_categories
+            columns:
+              - column: { name: "book_id", valueComputed: "(SELECT id FROM books WHERE title = 'Effective Java')" }
+              - column: { name: "category_id", valueComputed: "(SELECT id FROM categories WHERE name = 'Category1')" }
+
+        - insert:
+            tableName: books_categories
+            columns:
+              - column: { name: "book_id", valueComputed: "(SELECT id FROM books WHERE title = 'Clean Code')" }
+              - column: { name: "category_id", valueComputed: "(SELECT id FROM categories WHERE name = 'Category2')" }

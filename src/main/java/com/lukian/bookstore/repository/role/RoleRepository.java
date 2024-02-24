@@ -1,4 +1,4 @@
-package com.lukian.bookstore.repository;
+package com.lukian.bookstore.repository.role;
 
 import com.lukian.bookstore.model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
