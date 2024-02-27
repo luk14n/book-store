@@ -6,10 +6,15 @@ import com.lukian.bookstore.dto.shoppingcart.UpdateCartItemRequestDto;
 import com.lukian.bookstore.exception.EntityNotFoundException;
 import com.lukian.bookstore.mapper.CartItemMapper;
 import com.lukian.bookstore.mapper.ShoppingCartMapper;
+import com.lukian.bookstore.model.Book;
 import com.lukian.bookstore.model.CartItem;
 import com.lukian.bookstore.model.ShoppingCart;
+import com.lukian.bookstore.model.User;
+import com.lukian.bookstore.repository.book.BookRepository;
 import com.lukian.bookstore.repository.cart.CartItemRepository;
 import com.lukian.bookstore.repository.cart.ShoppingCartRepository;
+import com.lukian.bookstore.repository.user.UserRepository;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -23,6 +28,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final CartItemMapper itemMapper;
     @Qualifier("shoppingCartMapper")
     private final ShoppingCartMapper cartMapper;
+    private final UserRepository userRepository;
+    private final BookRepository bookRepository;
 
     /**
      * Fetching existing user's cart from DB based on passed ID, then assigning to
@@ -33,13 +40,19 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
      * @param userId         ID of user whose cart it is
      * @param requestDto DTO of requested item to add to the cart
      * @return DTO of updated cart (after desired item is added)
-     * @throws RuntimeException if the user's cart cannot be found in the DB.
      */
     @Override
     public ShoppingCartDto addBooksToCartByUserId(Long userId, AddItemToCartRequestDto requestDto) {
         ShoppingCart cartFromDB = getCartFromDB(userId);
 
         CartItem requestedItemToAdd = itemMapper.toModel(requestDto);
+
+        Book bookFromDb = bookRepository.findById(requestDto.bookId())
+                .orElseThrow(() -> new EntityNotFoundException("Cannot find book by given id"));
+
+        requestedItemToAdd.setBook(bookFromDb);
+
+        requestedItemToAdd.setQuantity(requestDto.quantity());
 
         requestedItemToAdd.setShoppingCart(cartFromDB);
 
@@ -93,8 +106,15 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     private ShoppingCart getCartFromDB(Long userId) {
-        return cartRepository.findByUserId(userId)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Cannot find cart by userId: " + userId));
+        Optional<ShoppingCart> cartFromDb = cartRepository.findByUserId(userId);
+        if (cartFromDb.isEmpty()) {
+            ShoppingCart shoppingCart = new ShoppingCart();
+            User userFromDb = userRepository.findById(userId)
+                    .orElseThrow(() -> new EntityNotFoundException(
+                            "User not found by user id: " + userId));
+            shoppingCart.setUser(userFromDb);
+            return cartRepository.save(shoppingCart);
+        }
+        return cartFromDb.get();
     }
 }
