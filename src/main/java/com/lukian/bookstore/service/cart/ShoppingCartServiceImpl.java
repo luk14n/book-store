@@ -14,7 +14,6 @@ import com.lukian.bookstore.repository.book.BookRepository;
 import com.lukian.bookstore.repository.cart.CartItemRepository;
 import com.lukian.bookstore.repository.cart.ShoppingCartRepository;
 import com.lukian.bookstore.repository.user.UserRepository;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -37,7 +36,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
      * (This way it will bind them together based on mapping in entities).
      * After that item is saved and resides in needed cart.
      *
-     * @param userId         ID of user whose cart it is
+     * @param userId     ID of user whose cart it is
      * @param requestDto DTO of requested item to add to the cart
      * @return DTO of updated cart (after desired item is added)
      */
@@ -68,17 +67,17 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     /**
      * Updating existing item in user's cart
-     *
+     * <p>
      * Retrieves item by its ID, then using mapper updates model based on
      * passed request DTO. After that retrieves cart, based on user ID to showcase
      * changes in items.
-     *
+     * <p>
      * Note: we do not need to fetch at first, since each
      *
-     * @param userId       ID of the user for whom the cart item is being updated.
-     * @param cartItemId   ID of the cart item to be updated.
-     * @param requestDto   DTO containing the updated information for the cart item.
-     * @return             DTO representation of the updated shopping cart after the item update.
+     * @param userId     ID of the user for whom the cart item is being updated.
+     * @param cartItemId ID of the cart item to be updated.
+     * @param requestDto DTO containing the updated information for the cart item.
+     * @return DTO representation of the updated shopping cart after the item update.
      * @throws RuntimeException if the cart item or user's cart cannot be found in the database.
      */
     @Override
@@ -106,15 +105,14 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     private ShoppingCart getCartFromDB(Long userId) {
-        Optional<ShoppingCart> cartFromDb = cartRepository.findByUserId(userId);
-        if (cartFromDb.isEmpty()) {
-            ShoppingCart shoppingCart = new ShoppingCart();
-            User userFromDb = userRepository.findById(userId)
-                    .orElseThrow(() -> new EntityNotFoundException(
-                            "User not found by user id: " + userId));
-            shoppingCart.setUser(userFromDb);
-            return cartRepository.save(shoppingCart);
-        }
-        return cartFromDb.get();
+        return cartRepository.findByUserId(userId)
+                .orElseGet(() -> {
+                    ShoppingCart shoppingCart = new ShoppingCart();
+                    User userFromDb = userRepository.findById(userId)
+                            .orElseThrow(() -> new EntityNotFoundException(
+                                    "User not found by user id: " + userId));
+                    shoppingCart.setUser(userFromDb);
+                    return cartRepository.save(shoppingCart);
+                });
     }
 }
