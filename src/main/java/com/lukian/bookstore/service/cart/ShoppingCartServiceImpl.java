@@ -6,16 +6,13 @@ import com.lukian.bookstore.dto.shoppingcart.UpdateCartItemRequestDto;
 import com.lukian.bookstore.exception.EntityNotFoundException;
 import com.lukian.bookstore.mapper.CartItemMapper;
 import com.lukian.bookstore.mapper.ShoppingCartMapper;
-import com.lukian.bookstore.model.Book;
 import com.lukian.bookstore.model.CartItem;
 import com.lukian.bookstore.model.ShoppingCart;
 import com.lukian.bookstore.model.User;
-import com.lukian.bookstore.repository.book.BookRepository;
 import com.lukian.bookstore.repository.cart.CartItemRepository;
 import com.lukian.bookstore.repository.cart.ShoppingCartRepository;
 import com.lukian.bookstore.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,18 +20,15 @@ import org.springframework.stereotype.Service;
 public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final ShoppingCartRepository cartRepository;
     private final CartItemRepository itemRepository;
-    @Qualifier("cartItemMapper")
     private final CartItemMapper itemMapper;
-    @Qualifier("shoppingCartMapper")
     private final ShoppingCartMapper cartMapper;
     private final UserRepository userRepository;
-    private final BookRepository bookRepository;
 
     /**
-     * Fetching existing user's cart from DB based on passed ID, then assigning to
-     * requested item that it belongs to the current cart
-     * (This way it will bind them together based on mapping in entities).
-     * After that item is saved and resides in needed cart.
+     * Method fetches cart from DB, maps requested dto to model,
+     * sets cart found earlier and saves new item to item repo.
+     *
+     * Note: during mapping process book ID is being set, using named method
      *
      * @param userId     ID of user whose cart it is
      * @param requestDto DTO of requested item to add to the cart
@@ -43,20 +37,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public ShoppingCartDto addBooksToCartByUserId(Long userId, AddItemToCartRequestDto requestDto) {
         ShoppingCart cartFromDB = getCartFromDB(userId);
-
         CartItem requestedItemToAdd = itemMapper.toModel(requestDto);
-
-        Book bookFromDb = bookRepository.findById(requestDto.bookId())
-                .orElseThrow(() -> new EntityNotFoundException("Cannot find book by given id"));
-
-        requestedItemToAdd.setBook(bookFromDb);
-
-        requestedItemToAdd.setQuantity(requestDto.quantity());
-
         requestedItemToAdd.setShoppingCart(cartFromDB);
-
         itemRepository.save(requestedItemToAdd);
-
         return cartMapper.toDto(cartFromDB);
     }
 
@@ -66,30 +49,28 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     /**
-     * Updating existing item in user's cart
-     * <p>
-     * Retrieves item by its ID, then using mapper updates model based on
-     * passed request DTO. After that retrieves cart, based on user ID to showcase
-     * changes in items.
-     * <p>
-     * Note: we do not need to fetch at first, since each
+     * Method updates existing item in existing cart.
+     * It fetches existing item, uses special mapper in order to
+     * update specific target based on DTO
+     * (in this case target is earlier retrieved item that we want to update,
+     * and source which retrieved cart is being updated from is passed DTO)
+     *
+     * Note: we do not need to fetch cart at first,
+     * since all existing items by default have associated cart,
+     * therefore we are fetching it in the end when returning response
      *
      * @param userId     ID of the user for whom the cart item is being updated.
      * @param cartItemId ID of the cart item to be updated.
      * @param requestDto DTO containing the updated information for the cart item.
      * @return DTO representation of the updated shopping cart after the item update.
-     * @throws RuntimeException if the cart item or user's cart cannot be found in the database.
      */
     @Override
     public ShoppingCartDto update(
             Long userId, Long cartItemId, UpdateCartItemRequestDto requestDto) {
         CartItem itemFromDb = getItemFromDb(cartItemId);
-
         itemMapper.updateFromDto(requestDto, itemFromDb);
-
-        ShoppingCart cartFromDb = getCartFromDB(userId);
-
-        return cartMapper.toDto(cartFromDb);
+        itemRepository.save(itemFromDb);
+        return cartMapper.toDto(getCartFromDB(userId));
     }
 
     @Override
