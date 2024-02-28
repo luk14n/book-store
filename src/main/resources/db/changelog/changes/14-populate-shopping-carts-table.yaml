@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: populate-shopping-carts-table
+      author: lukian
+      changes:
+        - insert:
+            tableName: shopping_carts
+            columns:
+              - column: { name: "user_id", valueComputed: "(SELECT id FROM users WHERE email = 'user1@email.com')" }
+        - insert:
+            tableName: shopping_carts
+            columns:
+              - column: { name: "user_id", valueComputed: "(SELECT id FROM users WHERE email = 'user2@email.com')" }

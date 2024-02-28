@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-is-deleted-column-to-shopping-carts-table
+      author: lukian
+      changes:
+        - addColumn:
+            tableName: shopping_carts
+            columns:
+              - column:
+                  name: is_deleted
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false

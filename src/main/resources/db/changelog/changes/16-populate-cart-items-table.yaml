@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: populate-cart-items-table
+      author: lukian
+      changes:
+        - insert:
+            tableName: cart_items
+            columns:
+              - column: { name: "shopping_cart_id", valueComputed: "(SELECT id FROM users WHERE email = 'user1@email.com')" }
+              - column: { name: "book_id", valueComputed: "(SELECT id FROM books WHERE title = 'Effective Java')" }
+              - column: { name: "quantity", value: "1" }
+        - insert:
+            tableName: cart_items
+            columns:
+              - column: { name: "shopping_cart_id", valueComputed: "(SELECT id FROM users WHERE email = 'user2@email.com')" }
+              - column: { name: "book_id", valueComputed: "(SELECT id FROM books WHERE title = 'Clean Code')" }
+              - column: { name: "quantity", value: "2" }
