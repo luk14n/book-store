@@ -46,3 +46,6 @@ databaseChangeLog:
 
   - include:
       file: /db/changelog/changes/16-populate-cart-items-table.yaml
+
+  - include:
+      file: /db/changelog/changes/17-add-is-deleted-column-to-shopping-carts-table.yaml
