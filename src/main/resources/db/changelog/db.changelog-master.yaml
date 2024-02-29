@@ -49,3 +49,9 @@ databaseChangeLog:
 
   - include:
       file: /db/changelog/changes/17-add-is-deleted-column-to-shopping-carts-table.yaml
+
+  - include:
+      file: /db/changelog/changes/18-create-orders-table.yaml
+
+  - include:
+      file: /db/changelog/changes/19-create-order-items-table.yaml
