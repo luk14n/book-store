@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -65,8 +66,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDto> findAll(Long userId) {
-        return orderRepository.findAllByUserId(userId).stream()
+    public List<OrderDto> findAll(Long userId, Pageable pageable) {
+        return orderRepository.findAllByUserId(userId, pageable).stream()
                 .map(orderMapper::toDto)
                 .toList();
     }
