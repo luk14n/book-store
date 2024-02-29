@@ -8,7 +8,6 @@ import org.mapstruct.Mapping;
 
 @Mapper(config = MapperConfig.class)
 public interface OrderMapper {
-
     @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "orderItems", source = "orderItems")
     @Mapping(target = "orderDate", source = "orderDate")

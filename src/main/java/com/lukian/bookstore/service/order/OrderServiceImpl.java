@@ -84,7 +84,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderItemDto finOrderItemById(Long userId, Long itemId, Long orderId) {
         Order orderFromDb = getOrderFromDbByUserIdAndOrderId(userId, orderId);
         return orderFromDb.getOrderItems().stream()
-                .filter(i -> i.getId().equals(itemId))
+                .filter(item -> item.getId().equals(itemId))
                 .findFirst()
                 .map(orderItemMapper::toDto)
                 .orElseThrow(() -> new EntityNotFoundException(
