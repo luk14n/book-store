@@ -70,7 +70,7 @@ class CategoryControllerIntegrationTest {
 
     @Test
     @DisplayName("Create new categories")
-    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
     void save_SaveNewCategory_ShouldReturnCategoryDto() throws Exception {
         String testName = "TestName";
         String testDescription = "TestDescription";
@@ -97,7 +97,7 @@ class CategoryControllerIntegrationTest {
 
     @Test
     @DisplayName("Update category by id")
-    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
     void update_UpdateCategory_ShouldReturnUpdatedCategoryDto() throws Exception {
         Long categoryId = 1L;
         String updatedName = "UpdatedName";
@@ -125,7 +125,7 @@ class CategoryControllerIntegrationTest {
 
     @Test
     @DisplayName("Update category by id with out authorities")
-    @WithMockUser(username = "user", authorities = {"USER"})
+    @WithMockUser(username = "user", authorities = {"ROLE_USER"})
     void update_UpdateCategoryWithoutPermission_ShouldReturnForbidden() throws Exception {
         Long categoryId = 1L;
         String updatedName = "UpdatedName";
@@ -145,7 +145,7 @@ class CategoryControllerIntegrationTest {
 
     @Test
     @DisplayName("Delete category by id")
-    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
     void deleteById_DeleteCategory_ShouldReturnNoContent() throws Exception {
         Long categoryIdToDelete = 1L;
 
@@ -157,7 +157,7 @@ class CategoryControllerIntegrationTest {
 
     @Test
     @DisplayName("Delete category by id with out authorities")
-    @WithMockUser(username = "user", authorities = {"USER"})
+    @WithMockUser(username = "user", authorities = {"ROLE_USER"})
     void deleteById_DeleteCategoryWithoutPermission_ShouldReturnForbidden() throws Exception {
         Long categoryIdToDelete = 1L;
 

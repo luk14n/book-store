@@ -75,7 +75,7 @@ class BookControllerIntegrationTest {
 
     @Test
     @DisplayName("Create book with valid data")
-    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
     void create_CreateBookWithValidData_ShouldReturnBookDto() throws Exception {
         Long testId = 4L;
         String testTitle = "testTileValid";
@@ -106,7 +106,7 @@ class BookControllerIntegrationTest {
 
     @Test
     @DisplayName("Update book with valid data")
-    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
     void update_UpdateBookWithValidData_ShouldReturnUpdateBookDto() throws Exception {
         Long testId = 1L;
         String updateTitle = "updateTile";
@@ -138,7 +138,7 @@ class BookControllerIntegrationTest {
 
     @Test
     @DisplayName("Delete book by valid id")
-    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
     void deleteById_DeleteBookById_ShouldReturnNoContent() throws Exception {
         Long testId = 1L;
 
@@ -150,7 +150,7 @@ class BookControllerIntegrationTest {
 
     @Test
     @DisplayName("Get book by valid id")
-    @WithMockUser(username = "user", authorities = {"USER"})
+    @WithMockUser(username = "user", authorities = {"ROLE_USER"})
     void findById_GetBookByValidId_ShouldReturnBookDto() throws Exception {
         Long testId = 1L;
         BookDto expectedDto = getBookDto(testId);
