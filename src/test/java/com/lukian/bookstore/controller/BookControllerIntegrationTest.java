@@ -92,7 +92,7 @@ class BookControllerIntegrationTest {
 
         String jsonRequest = objectMapper.writeValueAsString(requestDto);
 
-        MvcResult result = mockMvc.perform(post("api/books")
+        MvcResult result = mockMvc.perform(post("/api/books")
                         .content(jsonRequest)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
@@ -124,7 +124,7 @@ class BookControllerIntegrationTest {
 
         String jsonRequest = objectMapper.writeValueAsString(requestDto);
 
-        MvcResult result = mockMvc.perform(put("api/books/{id}", testId)
+        MvcResult result = mockMvc.perform(put("/api/books/{id}", testId)
                         .content(jsonRequest)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -142,7 +142,7 @@ class BookControllerIntegrationTest {
     void deleteById_DeleteBookById_ShouldReturnNoContent() throws Exception {
         Long testId = 1L;
 
-        MvcResult result = mockMvc.perform(delete("api/books/{id}", testId)
+        MvcResult result = mockMvc.perform(delete("/api/books/{id}", testId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent())
                 .andReturn();
@@ -155,7 +155,7 @@ class BookControllerIntegrationTest {
         Long testId = 1L;
         BookDto expectedDto = getBookDto(testId);
 
-        MvcResult result = mockMvc.perform(get("api/books/{id}", testId)
+        MvcResult result = mockMvc.perform(get("/api/books/{id}", testId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
