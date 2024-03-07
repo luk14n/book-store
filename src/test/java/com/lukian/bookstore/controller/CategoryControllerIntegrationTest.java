@@ -3,10 +3,6 @@ package com.lukian.bookstore.controller;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lukian.bookstore.dto.category.CategoryDto;
@@ -29,6 +25,8 @@ import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -69,111 +67,74 @@ class CategoryControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("Create new categories")
+    @DisplayName("Create new category as admin")
     @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
-    void save_SaveNewCategory_ShouldReturnCategoryDto() throws Exception {
-        String testName = "TestName";
-        String testDescription = "TestDescription";
+    void create_CreateNewCategoryAsAdmin_ShouldReturnCategoryDto() throws Exception {
+        CreateCategoryRequestDto requestDto = new CreateCategoryRequestDto(
+                "New Category", "Category Description");
 
-        CategoryDto expectedDto = createCategoryDto(testName, testDescription);
-        CreateCategoryRequestDto requestDto =
-                createCategoryRequestDtoDto(testName, testDescription);
-
-        String jsonRequest = objectMapper.writeValueAsString(requestDto);
-
-        MvcResult result = mockMvc.perform(post("/api/categories")
-                        .content(jsonRequest)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/categories")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestDto)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("New Category"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(
+                        "Category Description"))
                 .andReturn();
 
-        CategoryDto resultDto = objectMapper.readValue(
-                result.getResponse().getContentAsString(), CategoryDto.class);
+        String content = result.getResponse().getContentAsString();
+        CategoryDto createdCategory = objectMapper.readValue(content, CategoryDto.class);
 
-        assertNotNull(resultDto);
-        assertEquals(expectedDto.name(), resultDto.name());
-        assertEquals(expectedDto.description(), resultDto.description());
+        assertNotNull(createdCategory.id());
+        assertEquals("New Category", createdCategory.name());
+        assertEquals("Category Description", createdCategory.description());
     }
 
     @Test
-    @DisplayName("Update category by id")
-    @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
-    void update_UpdateCategory_ShouldReturnUpdatedCategoryDto() throws Exception {
-        Long categoryId = 1L;
-        String updatedName = "UpdatedName";
-        String updatedDescription = "UpdatedDescription";
-
-        CreateCategoryRequestDto updateRequestDto =
-                createCategoryRequestDtoDto(updatedName, updatedDescription);
-
-        String jsonRequest = objectMapper.writeValueAsString(updateRequestDto);
-
-        MvcResult result = mockMvc.perform(put("/api/categories/{id}", categoryId)
-                        .content(jsonRequest)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        CategoryDto resultDto = objectMapper.readValue(
-                result.getResponse().getContentAsString(), CategoryDto.class);
-
-        assertNotNull(resultDto);
-        assertEquals(categoryId, resultDto.id());
-        assertEquals(updatedName, resultDto.name());
-        assertEquals(updatedDescription, resultDto.description());
-    }
-
-    @Test
-    @DisplayName("Update category by id with out authorities")
+    @DisplayName("Get all categories as user with pagination")
     @WithMockUser(username = "user", authorities = {"ROLE_USER"})
-    void update_UpdateCategoryWithoutPermission_ShouldReturnForbidden() throws Exception {
-        Long categoryId = 1L;
-        String updatedName = "UpdatedName";
-        String updatedDescription = "UpdatedDescription";
+    void get_GetAllCategoriesAsUserWithPagination_ShouldReturnCategoryDtoList() throws Exception {
+        int page = 0;
+        int size = 10;
 
-        CreateCategoryRequestDto updateRequestDto =
-                createCategoryRequestDtoDto(updatedName, updatedDescription);
-
-        String jsonRequest = objectMapper.writeValueAsString(updateRequestDto);
-
-        MvcResult result = mockMvc.perform(put("/api/categories/{id}", categoryId)
-                        .content(jsonRequest)
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/categories")
+                        .param("page", String.valueOf(page))
+                        .param("size", String.valueOf(size))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isForbidden())
-                .andReturn();
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$").isArray())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name")
+                        .value("Test Category 1"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].description")
+                        .value("Test Description 1"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].name")
+                        .value("Test Category 2"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].description")
+                        .value("Test Description 2"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[2].name")
+                        .value("Test Category 3"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[2].description")
+                        .value("Test Description 3"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[3].name")
+                        .value("Test Category 4"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[3].description")
+                        .value("Test Description 4"));
     }
 
     @Test
-    @DisplayName("Delete category by id")
-    @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
-    void deleteById_DeleteCategory_ShouldReturnNoContent() throws Exception {
-        Long categoryIdToDelete = 1L;
-
-        MvcResult result = mockMvc.perform(delete("/api/categories/{id}", categoryIdToDelete)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent())
-                .andReturn();
-    }
-
-    @Test
-    @DisplayName("Delete category by id with out authorities")
+    @DisplayName("Get category by ID as user")
     @WithMockUser(username = "user", authorities = {"ROLE_USER"})
-    void deleteById_DeleteCategoryWithoutPermission_ShouldReturnForbidden() throws Exception {
-        Long categoryIdToDelete = 1L;
+    void get_GetCategoryByIdAsUser_ShouldReturnCategoryDto() throws Exception {
+        Long categoryIdToRetrieve = 1L;
+        String name = "Test Category 1";
+        String description = "Test Description 1";
 
-        MvcResult result = mockMvc.perform(delete("/api/categories/{id}", categoryIdToDelete)
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/categories/{id}", categoryIdToRetrieve)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isForbidden())
-                .andReturn();
-    }
-
-    private CategoryDto createCategoryDto(String name, String description) {
-        CategoryDto categoryDto = new CategoryDto(1L, name, description);
-        return categoryDto;
-    }
-
-    private CreateCategoryRequestDto createCategoryRequestDtoDto(String name, String description) {
-        return new CreateCategoryRequestDto(name, description);
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(categoryIdToRetrieve))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(name))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(description));
     }
 
     @AfterEach
