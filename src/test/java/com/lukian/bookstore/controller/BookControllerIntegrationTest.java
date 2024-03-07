@@ -168,7 +168,7 @@ class BookControllerIntegrationTest {
 
     @NotNull
     private static BookDto getBookDto(Long testId) {
-        String testTitle = "TestBookTitle1";
+        String testTitle = "Test Title 1";
         String testAuthor = "TestBookAuthor1";
         String testIsbn = "TestBookIsbn1";
         List<Long> testCategoryIds = List.of(1L);
