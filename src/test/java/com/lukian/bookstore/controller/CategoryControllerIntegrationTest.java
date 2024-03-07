@@ -81,7 +81,7 @@ class CategoryControllerIntegrationTest {
 
         String jsonRequest = objectMapper.writeValueAsString(requestDto);
 
-        MvcResult result = mockMvc.perform(post("/categories")
+        MvcResult result = mockMvc.perform(post("/api/categories")
                         .content(jsonRequest)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
@@ -108,7 +108,7 @@ class CategoryControllerIntegrationTest {
 
         String jsonRequest = objectMapper.writeValueAsString(updateRequestDto);
 
-        MvcResult result = mockMvc.perform(put("/categories/{id}", categoryId)
+        MvcResult result = mockMvc.perform(put("api/categories/{id}", categoryId)
                         .content(jsonRequest)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -136,7 +136,7 @@ class CategoryControllerIntegrationTest {
 
         String jsonRequest = objectMapper.writeValueAsString(updateRequestDto);
 
-        MvcResult result = mockMvc.perform(put("/categories/{id}", categoryId)
+        MvcResult result = mockMvc.perform(put("api/categories/{id}", categoryId)
                         .content(jsonRequest)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden())
@@ -149,7 +149,7 @@ class CategoryControllerIntegrationTest {
     void deleteById_DeleteCategory_ShouldReturnNoContent() throws Exception {
         Long categoryIdToDelete = 1L;
 
-        MvcResult result = mockMvc.perform(delete("/categories/{id}", categoryIdToDelete)
+        MvcResult result = mockMvc.perform(delete("api/categories/{id}", categoryIdToDelete)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent())
                 .andReturn();
@@ -161,7 +161,7 @@ class CategoryControllerIntegrationTest {
     void deleteById_DeleteCategoryWithoutPermission_ShouldReturnForbidden() throws Exception {
         Long categoryIdToDelete = 1L;
 
-        MvcResult result = mockMvc.perform(delete("/categories/{id}", categoryIdToDelete)
+        MvcResult result = mockMvc.perform(delete("api/categories/{id}", categoryIdToDelete)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden())
                 .andReturn();
