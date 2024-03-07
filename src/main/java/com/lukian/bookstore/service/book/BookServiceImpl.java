@@ -4,7 +4,6 @@ import com.lukian.bookstore.dto.book.BookDto;
 import com.lukian.bookstore.dto.book.BookDtoWithoutCategoryIds;
 import com.lukian.bookstore.dto.book.BookSearchParametersRequestDto;
 import com.lukian.bookstore.dto.book.CreateBookRequestDto;
-import com.lukian.bookstore.exception.EntityNotFoundException;
 import com.lukian.bookstore.mapper.BookMapper;
 import com.lukian.bookstore.model.Book;
 import com.lukian.bookstore.repository.book.BookRepository;
@@ -39,13 +38,13 @@ public class BookServiceImpl implements BookService {
     public BookDto findById(Long id) {
         return bookRepository.findById(id)
                 .map(bookMapper::toDto)
-                .orElseThrow(() -> new EntityNotFoundException("Cannot find book by if: " + id));
+                .orElseThrow(() -> new IllegalArgumentException("Cannot find book by if: " + id));
     }
 
     @Override
     public BookDto update(Long id, CreateBookRequestDto requestDto) {
         Book bookFromDb = bookRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Cannot find book by id: " + id));
+                .orElseThrow(() -> new IllegalArgumentException("Cannot find book by id: " + id));
 
         bookMapper.updateFromDto(requestDto, bookFromDb);
 
