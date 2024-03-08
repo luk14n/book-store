@@ -25,7 +25,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto getById(Long id) {
         return categoryMapper.toDto(categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cannot get Category by id: " + id)));
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Cannot get Category by id: " + id)));
     }
 
     @Override
@@ -48,7 +49,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto update(Long id, CategoryDto categoryDto) {
         Category categoryFromDb = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cannot get Category by id: " + id));
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Cannot get Category by id: " + id));
 
         categoryMapper.updateFromDto(categoryDto, categoryFromDb);
 

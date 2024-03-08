@@ -11,6 +11,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -64,8 +65,10 @@ public class BookController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Delete the book",
             description = "Delete a specific book from the online store by its unique ID")
-    public void deleteBook(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<Void> deleteBook(@PathVariable(name = "id") Long id) {
         bookService.delete(id);
+        return ResponseEntity.noContent().build();
+
     }
 
     @GetMapping("/search")
