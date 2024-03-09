@@ -11,6 +11,9 @@ import com.lukian.bookstore.model.User;
 import com.lukian.bookstore.repository.cart.ShoppingCartRepository;
 import com.lukian.bookstore.repository.role.RoleRepository;
 import com.lukian.bookstore.repository.user.UserRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import java.util.HashSet;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,8 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final ShoppingCartRepository cartRepository;
     private final RoleRepository roleRepository;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public UserRegisterResponseDto register(UserRegisterRequestDto requestDto)
@@ -44,7 +49,13 @@ public class UserServiceImpl implements UserService {
         Role roleFromDb = roleRepository.findRoleByRole(Role.RoleName.ROLE_USER)
                         .orElseThrow(() -> new EntityNotFoundException(
                                 "Cannot find role by given name"));
-        user.setRoles(Set.of(roleFromDb));
+
+        Set<Role> userRoles = user.getRoles();
+        if (userRoles == null) {
+            userRoles = new HashSet<>();
+        }
+        userRoles.add(roleFromDb);
+        user.setRoles(userRoles);
     }
 
     private void assignShoppingCartToNewUser(User user) {
