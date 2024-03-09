@@ -11,6 +11,7 @@ import com.lukian.bookstore.model.User;
 import com.lukian.bookstore.repository.cart.ShoppingCartRepository;
 import com.lukian.bookstore.repository.role.RoleRepository;
 import com.lukian.bookstore.repository.user.UserRepository;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +44,7 @@ public class UserServiceImpl implements UserService {
         Role roleFromDb = roleRepository.findRoleByRole(Role.RoleName.ROLE_USER)
                         .orElseThrow(() -> new EntityNotFoundException(
                                 "Cannot find role by given name"));
-        user.getRoles().add(roleFromDb);
+        user.setRoles(Set.of(roleFromDb));
     }
 
     private void assignShoppingCartToNewUser(User user) {
